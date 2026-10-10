@@ -18,6 +18,7 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as YieldRouteImport } from './routes/yield'
+import { Route as YieldPredictorRouteImport } from './routes/yield-predictor'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const YieldRoute = YieldRouteImport.update({
   path: '/yield',
   getParentRoute: () => rootRouteImport,
 } as any)
+const YieldPredictorRoute = YieldPredictorRouteImport.update({
+  id: '/yield-predictor',
+  path: '/yield-predictor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/yield': typeof YieldRoute
+  '/yield-predictor': typeof YieldPredictorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/yield': typeof YieldRoute
+  '/yield-predictor': typeof YieldPredictorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/yield': typeof YieldRoute
+  '/yield-predictor': typeof YieldPredictorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/scenarios'
     | '/settings'
     | '/yield'
+    | '/yield-predictor'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/scenarios'
     | '/settings'
     | '/yield'
+    | '/yield-predictor'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/scenarios'
     | '/settings'
     | '/yield'
+    | '/yield-predictor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
   YieldRoute: typeof YieldRoute
+  YieldPredictorRoute: typeof YieldPredictorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof YieldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/yield-predictor': {
+      id: '/yield-predictor'
+      path: '/yield-predictor'
+      fullPath: '/yield-predictor'
+      preLoaderRoute: typeof YieldPredictorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,
   YieldRoute: YieldRoute,
+  YieldPredictorRoute: YieldPredictorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

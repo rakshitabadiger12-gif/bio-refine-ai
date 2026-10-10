@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { loadHistory, OUTPUTS, type HistoryRow } from "@/lib/yieldModel";
 import { displayTemp, useSim } from "@/lib/sim/engine";
 import { REACTOR_IDS, REACTORS } from "@/lib/sim/types";
 import { computeYield, DEFAULT_YIELD } from "@/lib/sim/yield";
@@ -26,6 +27,8 @@ function Overview() {
   const lastSync = useSim((s) => s.lastSync);
   const status = useSim((s) => s.status);
   const unit = useSim((s) => s.settings.tempUnit);
+  const [lastPred, setLastPred] = useState<HistoryRow | null>(null);
+  useEffect(() => setLastPred(loadHistory()[0] ?? null), []);
 
   const active = REACTOR_IDS.filter((id) => current[id]).length;
   const anomalies = REACTOR_IDS.filter((id) => current[id]?.aiLabel === "anomaly").length;
@@ -68,6 +71,20 @@ function Overview() {
         <Kpi label="Limit alerts" value={limitAlerts} tone={limitAlerts ? "warn" : "ok"} sub="Rule-based" />
         <Kpi label="Est. ethanol / t bagasse" value={`${outputs.e.practical.toFixed(0)} L`} sub={`Biogas ${outputs.b.secondary[1].value.toFixed(0)} m³ · Fert ${outputs.f.practical.toFixed(0)} kg`} tone="ok" />
         <Kpi label="Last sync" value={fmtTime(lastSync)} sub="Local simulation engine" />
+      </div>
+
+      <div className="mt-3 panel flex flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2.5 text-sm">
+        <span className="label-tech">Latest model-predicted yields</span>
+        {lastPred ? (
+          <>
+            {OUTPUTS.map((k) => (
+              <span key={k}><span className="text-muted-foreground capitalize">{k}: </span><span className="num text-telemetry">{lastPred.prediction.values[k].toLocaleString(undefined, { maximumFractionDigits: 3 })} {lastPred.prediction.units[k] ?? ""}</span></span>
+            ))}
+            <span className="text-xs text-muted-foreground">for {lastPred.inputs.weight} kg · {lastPred.inputs.moisture}% · {lastPred.inputs.temperature} °C · pH {lastPred.inputs.ph} (user-entered)</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">None yet — <Link to="/yield-predictor" className="text-telemetry hover:underline">connect a model in Yield Predictor</Link></span>
+        )}
       </div>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-3">

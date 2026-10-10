@@ -1,7 +1,7 @@
 import { Link, useHydrated, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
-  Activity, BarChart3, Bell, Cpu, Factory, FileDown, FlaskConical, GitBranch, Menu, Pause, Play, RotateCcw, Settings, Sliders, X, Zap,
+  Activity, BarChart3, Bell, Cpu, Factory, FileDown, FlaskConical, GitBranch, Menu, Pause, Play, RotateCcw, Settings, Sliders, Sparkles, X, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { bootSimulation, sim, useSim } from "@/lib/sim/engine";
@@ -15,6 +15,7 @@ const NAV = [
   { to: "/digital-twin", label: "Process Digital Twin", icon: GitBranch },
   { to: "/analytics", label: "AI Analytics", icon: BarChart3 },
   { to: "/yield", label: "Yield Prediction", icon: Activity },
+  { to: "/yield-predictor", label: "Yield Predictor", icon: Sparkles },
   { to: "/events", label: "Event & Alarm Center", icon: Bell },
   { to: "/scenarios", label: "Scenario Simulator", icon: Sliders },
   { to: "/reports", label: "Reports & Export", icon: FileDown },

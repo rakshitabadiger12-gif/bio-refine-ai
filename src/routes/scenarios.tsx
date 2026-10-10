@@ -20,12 +20,22 @@ export const Route = createFileRoute("/scenarios")({
       { property: "og:description", content: "Baseline vs modified scenario comparison with saved scenarios." },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { mass?: number; moisture?: number; t?: number; ph?: number } => {
+    const n = (v: unknown) => (v === undefined || v === "" || !Number.isFinite(Number(v)) ? undefined : Number(v));
+    return { mass: n(s.mass), moisture: n(s.moisture), t: n(s.t), ph: n(s.ph) };
+  },
   component: Scenarios,
 });
 
 function Scenarios() {
   const [base] = useState<YieldInputs>(DEFAULT_YIELD);
-  const [mod, setMod] = useState<YieldInputs>({ ...DEFAULT_YIELD, hydrolysisEff: 85, temperature: 34 });
+  const q = Route.useSearch();
+  const fromPredictor = q.mass !== undefined || q.moisture !== undefined || q.t !== undefined || q.ph !== undefined;
+  const [mod, setMod] = useState<YieldInputs>(() =>
+    fromPredictor
+      ? { ...DEFAULT_YIELD, massKg: q.mass ?? DEFAULT_YIELD.massKg, moisture: q.moisture ?? DEFAULT_YIELD.moisture, temperature: q.t ?? DEFAULT_YIELD.temperature, ph: q.ph ?? DEFAULT_YIELD.ph }
+      : { ...DEFAULT_YIELD, hydrolysisEff: 85, temperature: 34 },
+  );
   const [name, setName] = useState("");
   const saved = useSim((s) => s.scenarios);
   const errs = validate(mod);
@@ -45,7 +55,7 @@ function Scenarios() {
     <div>
       <PageHeader
         title="Scenario Simulator"
-        sub="Baseline = default operating point for the selected pathway. Results recalculate instantly."
+        sub={fromPredictor ? "Modified scenario loaded from Yield Predictor conditions (user-entered). Results use the simplified mass-balance simulator, not the trained model." : "Baseline = default operating point for the selected pathway. Results recalculate instantly."}
         actions={
           <>
             <Button size="sm" variant="outline" onClick={() => setMod(DEFAULT_YIELD)}><RotateCcw className="h-3.5 w-3.5" /> Reset</Button>
