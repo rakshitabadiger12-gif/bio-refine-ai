@@ -49,7 +49,7 @@ function printSummary() {
 }
 
 function Reports() {
-  const counts = useSim((s) => ({ h: s.history.ethanol.length + s.history.biogas.length + s.history.fertilizer.length, e: s.events.length }));
+  const counts = { h: useSim((s) => s.history.ethanol.length + s.history.biogas.length + s.history.fertilizer.length), e: useSim((s) => s.events.length) };
   const items = [
     { t: "Current reactor readings", d: "Latest simulated reading for each reactor (CSV).", f: () => download(`biorefine-current-${stamp()}.csv`, currentCSV(getState().current)) },
     { t: "Historical sensor records", d: `${counts.h} stored readings across all reactors (CSV).`, f: () => download(`biorefine-history-${stamp()}.csv`, historyCSV(getState().history)) },
