@@ -54,7 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <nav className="space-y-0.5 p-2">
           {NAV.map((n) => {
-            const active = n.to === "/" ? path === "/" : path.startsWith(n.to);
+            const active = path === n.to || (n.to !== "/" && path.startsWith(n.to + "/"));
             return (
               <Link
                 key={n.to}
