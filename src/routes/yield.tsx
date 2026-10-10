@@ -3,7 +3,8 @@ import { useMemo, useState } from "react";
 import { Download, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { computeYield, DEFAULT_YIELD, validate, type YieldInputs } from "@/lib/sim/yield";
-import { download, toCSV } from "@/lib/sim/csv";
+import { download } from "@/lib/sim/csv";
+import { yieldCSV } from "@/lib/sim/exports";
 import { YieldForm } from "@/components/bio/YieldForm";
 import { Kpi, PageHeader, Panel } from "@/components/bio/ui";
 
@@ -18,21 +19,6 @@ export const Route = createFileRoute("/yield")({
   }),
   component: YieldPage,
 });
-
-export function yieldCSV(i: YieldInputs) {
-  const r = computeYield(i);
-  const rows: unknown[][] = [
-    ...Object.entries(i).map(([k, v]) => ["input", k, v, ""]),
-    ["result", "dry_mass", r.dryMassKg, "kg"],
-    ["result", "condition_factor", r.conditionFactor, "-"],
-    ["result", `theoretical_${r.primaryLabel}`, r.theoretical, r.primaryUnit],
-    ["result", `practical_${r.primaryLabel}`, r.practical, r.primaryUnit],
-    ["result", "conversion_efficiency", r.conversionEff, "%"],
-    ...r.secondary.map((s) => ["result", s.label, s.value, s.unit]),
-    ...r.assumptions.map((a) => ["assumption", a, "", ""]),
-  ];
-  return toCSV(["kind", "name", "value", "unit"], rows);
-}
 
 function YieldPage() {
   const [inp, setInp] = useState<YieldInputs>(DEFAULT_YIELD);

@@ -10,11 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as DigitalTwinRouteImport } from './routes/digital-twin'
 import { Route as ReactorsRouteImport } from './routes/reactors'
+import { Route as YieldRouteImport } from './routes/yield'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalTwinRoute = DigitalTwinRouteImport.update({
+  id: '/digital-twin',
+  path: '/digital-twin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReactorsRoute = ReactorsRouteImport.update({
@@ -22,31 +35,48 @@ const ReactorsRoute = ReactorsRouteImport.update({
   path: '/reactors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const YieldRoute = YieldRouteImport.update({
+  id: '/yield',
+  path: '/yield',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/digital-twin': typeof DigitalTwinRoute
   '/reactors': typeof ReactorsRoute
+  '/yield': typeof YieldRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/digital-twin': typeof DigitalTwinRoute
   '/reactors': typeof ReactorsRoute
+  '/yield': typeof YieldRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/digital-twin': typeof DigitalTwinRoute
   '/reactors': typeof ReactorsRoute
+  '/yield': typeof YieldRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/reactors'
+  fullPaths: '/' | '/analytics' | '/digital-twin' | '/reactors' | '/yield'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/reactors'
-  id: '__root__' | '/' | '/reactors'
+  to: '/' | '/analytics' | '/digital-twin' | '/reactors' | '/yield'
+  id: '__root__' | '/' | '/analytics' | '/digital-twin' | '/reactors' | '/yield'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  DigitalTwinRoute: typeof DigitalTwinRoute
   ReactorsRoute: typeof ReactorsRoute
+  YieldRoute: typeof YieldRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-twin': {
+      id: '/digital-twin'
+      path: '/digital-twin'
+      fullPath: '/digital-twin'
+      preLoaderRoute: typeof DigitalTwinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reactors': {
       id: '/reactors'
       path: '/reactors'
@@ -65,12 +109,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReactorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/yield': {
+      id: '/yield'
+      path: '/yield'
+      fullPath: '/yield'
+      preLoaderRoute: typeof YieldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  DigitalTwinRoute: DigitalTwinRoute,
   ReactorsRoute: ReactorsRoute,
+  YieldRoute: YieldRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
