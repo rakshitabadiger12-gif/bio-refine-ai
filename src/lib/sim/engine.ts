@@ -71,6 +71,7 @@ let state: SimState = {
   storage: "memory",
 };
 
+const initialState = state;
 const listeners = new Set<() => void>();
 function set(patch: Partial<SimState>) {
   state = { ...state, ...patch };
@@ -88,7 +89,7 @@ export function useSim<T>(sel: (s: SimState) => T): T {
   return useSyncExternalStore(
     subscribe,
     () => sel(state),
-    () => sel(state),
+    () => sel(initialState),
   );
 }
 
