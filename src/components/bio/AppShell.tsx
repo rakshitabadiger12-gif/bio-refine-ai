@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useHydrated, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   Activity, BarChart3, Bell, Cpu, Factory, FileDown, FlaskConical, GitBranch, Menu, Pause, Play, RotateCcw, Settings, Sliders, X, Zap,
@@ -23,6 +23,7 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const hydrated = useHydrated();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const status = useSim((s) => s.status);
   const lastSync = useSim((s) => s.lastSync);
@@ -104,7 +105,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Button size="sm" variant="outline" onClick={() => sim.reset()} title="Reset simulation to initial setpoints"><RotateCcw className="h-3.5 w-3.5" /><span className="hidden sm:inline">Reset</span></Button>
           </div>
         </header>
-        <main className="min-w-0 flex-1 p-3 md:p-5">{children}</main>
+        <main className="min-w-0 flex-1 p-3 md:p-5">{hydrated ? children : <div className="label-tech p-10 text-center">Connecting to simulation engine…</div>}</main>
       </div>
     </div>
   );
