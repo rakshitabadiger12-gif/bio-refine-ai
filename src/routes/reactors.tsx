@@ -35,7 +35,8 @@ function Reactors() {
   const limits = useSim((s) => s.settings.limits[id]);
   const sens = useSim((s) => s.settings.sensitivity);
   const unit = useSim((s) => s.settings.tempUnit);
-  const events = useSim((s) => s.events.filter((e) => e.reactor === id).slice(0, 8));
+  const allEvents = useSim((s) => s.events);
+  const events = useMemo(() => allEvents.filter((e) => e.reactor === id).slice(0, 8), [allEvents, id]);
   const tone = reactorTone(reading);
   const def = REACTORS[id];
 
